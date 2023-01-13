@@ -1,9 +1,6 @@
 package com.example.apibasic.post.api;
 
-import com.example.apibasic.post.dto.PostCreateDTO;
-import com.example.apibasic.post.dto.PostDetailResponseDTO;
-import com.example.apibasic.post.dto.PostModifyDTO;
-import com.example.apibasic.post.dto.PostResponseDTO;
+import com.example.apibasic.post.dto.*;
 import com.example.apibasic.post.entity.PostEntity;
 import com.example.apibasic.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,9 +50,14 @@ public class PostApiController {
                 .map(PostResponseDTO::new)
                 .collect(toList());
 
+        PostListResponseDTO listResponseDTO = PostListResponseDTO.builder()
+                .count(responseDTOList.size())
+                .posts(responseDTOList)
+                .build();
+
         return ResponseEntity
                 .ok()
-                .body(responseDTOList)
+                .body(listResponseDTO)
                 ;
     }
 
