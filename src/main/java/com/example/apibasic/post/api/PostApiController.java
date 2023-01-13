@@ -38,21 +38,35 @@ public class PostApiController {
     public ResponseEntity<?> list() {
         log.info("/posts GET request");
         List<PostEntity> list = postRepository.findAll();
-        return null;
+        return ResponseEntity
+                .ok()
+                .body(list)
+                ;
     }
 
     // 게시물 개별 조회
     @GetMapping("/{postNo}")
     public ResponseEntity<?> detail(@PathVariable Long postNo) {
         log.info("/posts/{} GET request", postNo);
-        return null;
+
+        PostEntity post = postRepository.findOne(postNo);
+        return ResponseEntity
+                .ok()
+                .body(post)
+                ;
     }
 
     // 게시물 등록
     @PostMapping
-    public ResponseEntity<?> create() {
+    public ResponseEntity<?> create(@RequestBody PostEntity entity) {
         log.info("/posts POST request");
-        return null;
+        log.info("게시물 정보: {}", entity);
+
+        boolean flag = postRepository.save(entity);
+        return flag
+                ? ResponseEntity.ok().body("INSERT-SUCCESS")
+                : ResponseEntity.badRequest().body("INSERT-FAIL")
+                ;
     }
 
     // 게시물 수정
