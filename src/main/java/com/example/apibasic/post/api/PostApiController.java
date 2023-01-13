@@ -1,8 +1,14 @@
 package com.example.apibasic.post.api;
 
+import com.example.apibasic.post.entity.PostEntity;
+import com.example.apibasic.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // 리소스 : 게시물 (Post)
 /*
@@ -14,13 +20,24 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/posts")
 public class PostApiController {
+
+    // PostRepository에게 의존하는 관계
+    private final PostRepository postRepository;
+
+    //@Autowired // 스프링 컨테이너에게 의존객체를 자동주입해달라
+//    public PostApiController(PostRepository postRepository) {
+//        this.postRepository = postRepository;
+//    }
+
 
     // 게시물 목록 조회
     @GetMapping
     public ResponseEntity<?> list() {
         log.info("/posts GET request");
+        List<PostEntity> list = postRepository.findAll();
         return null;
     }
 
