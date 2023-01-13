@@ -1,6 +1,7 @@
 package com.example.apibasic.post.api;
 
 import com.example.apibasic.post.dto.PostCreateDTO;
+import com.example.apibasic.post.dto.PostResponseDTO;
 import com.example.apibasic.post.entity.PostEntity;
 import com.example.apibasic.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 // 리소스 : 게시물 (Post)
 /*
@@ -39,9 +44,15 @@ public class PostApiController {
     public ResponseEntity<?> list() {
         log.info("/posts GET request");
         List<PostEntity> list = postRepository.findAll();
+
+        // 엔터티 리스트를 DTO리스트로 변환해서 클라이언트에 응답
+        List<PostResponseDTO> responseDTOList = list.stream()
+                .map(PostResponseDTO::new)
+                .collect(toList());
+
         return ResponseEntity
                 .ok()
-                .body(list)
+                .body(responseDTOList)
                 ;
     }
 
