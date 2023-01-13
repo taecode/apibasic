@@ -18,6 +18,7 @@ public class PostResponseDTO {
     private String title;
     private String content;
     private List<String> hashTags;
+
     @JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDateTime regDate;
 

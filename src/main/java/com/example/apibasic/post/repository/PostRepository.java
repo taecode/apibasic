@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 // 게시물 데이터를 CRUD(생성, 조회, 수정, 삭제)
 @Repository // 이 클래스로 만든 객체는 스프링이 관리좀해줘라
@@ -15,14 +18,10 @@ public class PostRepository {
 
     // 게시물 목록 조회
     public List<PostEntity> findAll() {
-        List<PostEntity> postEntityList = new ArrayList<>();
 
-        Set<Long> keySet = posts.keySet();
-        for (Long postNo : keySet) {
-            PostEntity postEntity = posts.get(postNo);
-            postEntityList.add(postEntity);
-        }
-        return postEntityList;
+        return posts.keySet().stream()
+                .map(posts::get)
+                .collect(toList());
     }
 
     // 게시물 개별 조회

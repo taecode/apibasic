@@ -1,6 +1,8 @@
 package com.example.apibasic.post.api;
 
 import com.example.apibasic.post.dto.PostCreateDTO;
+import com.example.apibasic.post.dto.PostDetailResponseDTO;
+import com.example.apibasic.post.dto.PostModifyDTO;
 import com.example.apibasic.post.dto.PostResponseDTO;
 import com.example.apibasic.post.entity.PostEntity;
 import com.example.apibasic.post.repository.PostRepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,9 +65,13 @@ public class PostApiController {
         log.info("/posts/{} GET request", postNo);
 
         PostEntity post = postRepository.findOne(postNo);
+
+        // 엔터티를 DTO로 변환
+        PostDetailResponseDTO dto = new PostDetailResponseDTO(post);
+
         return ResponseEntity
                 .ok()
-                .body(post)
+                .body(dto)
                 ;
     }
 
@@ -86,14 +93,38 @@ public class PostApiController {
 
     // 게시물 수정
     @PatchMapping("/{postNo}")
-    public ResponseEntity<?> modify(@PathVariable Long postNo) {
+    public ResponseEntity<?> modify(
+            @PathVariable Long postNo
+            , @RequestBody PostModifyDTO modifyDTO
+            ) {
         log.info("/posts/{} PATCH request", postNo);
-        return null;
+        log.info("수정할 정보 : {}", modifyDTO);
+
+        // 수정 전 데이터 조회하기
+        PostEntity entity = postRepository.findOne(postNo);
+        // 수정 진행
+        String modTitle = modifyDTO.getTitle();
+        String modContent = modifyDTO.getContent();
+
+        if (modTitle != null) entity.setTitle(modTitle);
+        if (modContent != null) entity.setContent(modContent);
+        entity.setModifyDate(LocalDateTime.now());
+
+        boolean flag = postRepository.save(entity);
+        return flag
+                ? ResponseEntity.ok().body("MODIFY-SUCCESS")
+                : ResponseEntity.badRequest().body("MODIFY-FAIL")
+                ;
     }
+
     // 게시물 삭제
     @DeleteMapping("/{postNo}")
     public ResponseEntity<?> remove(@PathVariable Long postNo) {
         log.info("/posts/{} DELETE request", postNo);
-        return null;
+        boolean flag = postRepository.delete(postNo);
+        return flag
+                ? ResponseEntity.ok().body("DELETE-SUCCESS")
+                : ResponseEntity.badRequest().body("DELETE-FAIL")
+                ;
     }
 }
