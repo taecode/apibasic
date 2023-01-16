@@ -37,7 +37,7 @@ public class PostCreateDTO {
     // PostEntity로 변환하는 유틸 메서드
     public PostEntity toEntity() {
         return PostEntity.builder()
-                .postNo(PostEntity.sequence++)
+                //.postNo(PostEntity.sequence++)
                 .writer(this.writer)
                 .content(this.content)
                 .title(this.title)

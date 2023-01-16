@@ -1,8 +1,6 @@
 package com.example.apibasic.post.api;
 
 import com.example.apibasic.post.dto.*;
-import com.example.apibasic.post.entity.PostEntity;
-import com.example.apibasic.post.repository.PostRepository;
 import com.example.apibasic.post.service.PostService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -14,10 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 // 리소스 : 게시물 (Post)
 /*

@@ -131,8 +131,8 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("2번 회원의 닉네임과 성별을 수정해야 한다.")
-    @Transactional
-    @Rollback
+    //@Transactional
+    //@Rollback
     void modifyTest(){
         //given
         Long userCode=2L;
@@ -140,12 +140,21 @@ class MemberRepositoryTest {
         Gender newGender=FEMALE;
 
         //when
-        //JPA에서 수정은 조회 후 setter로 변경
+        //JPA에서 수정은 조회 후 setter로 변경 후 다시 save
         Optional<MemberEntity> foundMember = memberRepository.findById(userCode);
-        foundMember.ifPresent(m->{
+        if (foundMember.isPresent()) {
+            MemberEntity m = foundMember.get();
             m.setNickName(newNickName);
             m.setGender(newGender);
-        });
+            memberRepository.save(m);
+        }
+
+        //위에꺼 람다로 쓰면 아래
+//        foundMember.ifPresent(m -> {
+//            m.setNickName(newNickName);
+//            m.setGender(newGender);
+//            memberRepository.save(m);
+//        });
 
         Optional<MemberEntity> modifiedMember = memberRepository.findById(userCode); //수정 후 다시
 
