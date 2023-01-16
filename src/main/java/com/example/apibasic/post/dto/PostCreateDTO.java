@@ -2,6 +2,7 @@ package com.example.apibasic.post.dto;
 
 import com.example.apibasic.post.entity.PostEntity;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import lombok.*;
 
 import javax.validation.constraints.Max;
@@ -18,14 +19,14 @@ import java.util.List;
 @Builder
 public class PostCreateDTO {
 
-
     /*
-        NotNull: null 값일 경우 에러발생
+        NotNull : null값일 경우 에러발생
         NotEmpty: 빈문자열일 경우 에러발생
-        NotBlank: null이거나 빈문자열일 경우 에러발생
+        NotBlank:  null이거나 빈문자열일 경우 에러발생
      */
     @NotBlank
-    @Size(min=2,max=5)//글자수는 2~5자 사이
+    @Size(min = 2, max = 5) // 글자수는 2~5자 사이
+
     private String writer;
     @NotBlank
     @Min(1) @Max(20)

@@ -84,13 +84,13 @@ public class PostApiController {
     // 게시물 등록
     @Parameters({
             @Parameter(name = "작성자", description = "게시물 작성자를 입력", example = "김철수")
+            , @Parameter(name = "내용", description = "글 내용을 입력", example = "하하호호호~~~")
     })
-
     @PostMapping
     public ResponseEntity<?> create(
             @Validated @RequestBody PostCreateDTO createDTO
-            , BindingResult result) //검증 에러 정보를 갖고 있는 객체
-    {
+            , BindingResult result // 검증 에러 정보를 갖고 있는 객체
+    ) {
         if (result.hasErrors()) { // 검증에러가 발생할 시 true 리턴
             List<FieldError> fieldErrors = result.getFieldErrors();
             fieldErrors.forEach(err -> {
