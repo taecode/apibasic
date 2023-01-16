@@ -11,6 +11,10 @@ logging:
         apibasic:
           req: trace
 
+springdoc:
+  swagger-ui:
+    path: /myapi.html
+
 #spring.datasource.url=xxx
 #spring.datasource.username=xxx
 #spring.datasource.password=xxx
