@@ -2,6 +2,7 @@ package com.example.apibasic.jpabasic.repository;
 
 import com.example.apibasic.jpabasic.entity.Gender;
 import com.example.apibasic.jpabasic.entity.MemberEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -41,6 +42,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
    @Modifying //수정 ,삭제할 때 붙이기
    @Query("delete from MemberEntity m where m.nickName=:nick")
    void deleteByNickName(@Param("nick") String nick);
+
 
 
 }
