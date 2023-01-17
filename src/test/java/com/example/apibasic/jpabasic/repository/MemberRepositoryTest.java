@@ -223,4 +223,49 @@ class MemberRepositoryTest {
             assertTrue(m.getNickName().contains("박"));
         });
     }
+
+    @Test
+    @DisplayName("JPQL을 사용해서 계정명이 zzz1234인 회원을 조회해야 한다.")
+    void jpqlTest1() {
+        // given
+        String account="zzz1234";
+        // when
+        MemberEntity member = memberRepository.getMemberByAccount(account);
+        // then
+        System.out.println("member = " + member);
+        assertEquals("박꾸러긔",member.getNickName());
+    }
+
+    @Test
+    @DisplayName("JPQL을 사용해서 닉네임이 궁예이면서 성별이 남성인 회원을 조회해야 한다.")
+    void jpqlTest2() {
+        // given
+        String nickName = "궁예";
+        Gender gender=MALE;
+        // when
+        List<MemberEntity> list = memberRepository.getMembersByNickAndGender(nickName, gender);
+
+        // then
+        list.forEach(m->{
+            System.out.println(m);
+            assertEquals("궁예", m.getNickName());
+            assertEquals(MALE,m.getGender());
+        });
+
+    }
+
+    @Test
+    @DisplayName("JPQL을 사용하여 이름에 '박'이 포함된 회원만 조회해야 한다.")
+    void jpqlTest3() {
+        // given
+        String nickName = "박";
+        // when
+        List<MemberEntity> list
+                = memberRepository.getMembersByNickName(nickName);
+        // then
+        list.forEach(m -> {
+            System.out.println(m);
+            assertTrue(m.getNickName().contains("박"));
+        });
+    }
 }
