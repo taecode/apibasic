@@ -26,12 +26,13 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach //각 테스트 실행하기 전에 실행되는 내용
-    void bulkInsert(){
+    @BeforeEach
+        //각 테스트 실행하기 전에 실행되는 내용
+    void bulkInsert() {
         MemberEntity saveMember1 = MemberEntity.builder()
                 .account("zzz1234")
                 .password("1234")
-                .nickName("꾸러긔")
+                .nickName("박꾸러긔")
                 .gender(FEMALE)
                 .build();
         MemberEntity saveMember2 = MemberEntity.builder()
@@ -46,10 +47,25 @@ class MemberRepositoryTest {
                 .nickName("찬호박")
                 .gender(MALE)
                 .build();
+        MemberEntity saveMember4 = MemberEntity.builder()
+                .account("ddd857")
+                .password("1111")
+                .nickName("달고나")
+                .gender(FEMALE)
+                .build();
+        MemberEntity saveMember5 = MemberEntity.builder()
+                .account("fff12323")
+                .password("6656")
+                .nickName("관종")
+                .gender(FEMALE)
+                .build();
+
 
         memberRepository.save(saveMember1);
         memberRepository.save(saveMember2);
         memberRepository.save(saveMember3);
+        memberRepository.save(saveMember4);
+        memberRepository.save(saveMember5);
 
     }
 
@@ -59,7 +75,8 @@ class MemberRepositoryTest {
     @Test
     @DisplayName("회원의 가입 정보를 데이터베이스에 저장해야 한다.")
     @Transactional
-    @Rollback  // 테스트가 끝나면 롤백해라
+    @Rollback
+    // 테스트가 끝나면 롤백해라
     void saveTest() {
         // given - when - then 패턴
         // given : 테스트시 주어지는 데이터
@@ -115,10 +132,10 @@ class MemberRepositoryTest {
     @DisplayName("회원 데이터를 3개 등록하고 그 중 하나의 회원을 삭제해야 한다.")
     @Transactional
     @Rollback
-    void deleteTest(){
+    void deleteTest() {
 
         //given
-        Long userCode=2L;
+        Long userCode = 2L;
         //when
         memberRepository.deleteById(userCode);
         Optional<MemberEntity> foundMember = memberRepository.findById(userCode);
@@ -131,13 +148,13 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("2번 회원의 닉네임과 성별을 수정해야 한다.")
-    //@Transactional
-    //@Rollback
-    void modifyTest(){
+        //@Transactional
+        //@Rollback
+    void modifyTest() {
         //given
-        Long userCode=2L;
+        Long userCode = 2L;
         String newNickName = "닭강정";
-        Gender newGender=FEMALE;
+        Gender newGender = FEMALE;
 
         //when
         //JPA에서 수정은 조회 후 setter로 변경 후 다시 save
@@ -159,8 +176,51 @@ class MemberRepositoryTest {
         Optional<MemberEntity> modifiedMember = memberRepository.findById(userCode); //수정 후 다시
 
         //then
-        assertEquals("닭강정",modifiedMember.get().getNickName());
-        assertEquals(FEMALE,modifiedMember.get().getGender());
+        assertEquals("닭강정", modifiedMember.get().getNickName());
+        assertEquals(FEMALE, modifiedMember.get().getGender());
     }
 
+    @Test
+    @DisplayName("쿼리메서드를 사용하여 여성회원만 조회해야 한다.")
+    void findByGenderTest() {
+        // given
+        Gender gender = FEMALE;
+        // when
+        List<MemberEntity> list = memberRepository.findByGender(gender);
+        // then
+        list.forEach(m -> {
+            System.out.println(m);
+            assertTrue(m.getGender() == FEMALE);
+        });
+    }
+
+    @Test
+    @DisplayName("쿼리메서드를 사용하여 계정명이 abc4321이면서 남성인 회원만 조회해야 한다.")
+    void findByAccountAndGenderTest() {
+        // given
+        String account = "abc4321";
+        Gender gender = MALE;
+        // when
+        List<MemberEntity> list = memberRepository.findByAccountAndGender(account, gender);
+        // then
+        list.forEach(m -> {
+            System.out.println(m);
+            assertTrue(m.getGender() == MALE);
+            assertEquals("abc4321", m.getAccount());
+        });
+    }
+
+    @Test
+    @DisplayName("쿼리메서드를 사용하여 이름에 '박'이 포함된 회원만 조회해야 한다.")
+    void findByNickNameContainingTest() {
+        // given
+        String nickName="박";
+        // when
+        List<MemberEntity> list = memberRepository.findByNickNameContaining(nickName);
+        // then
+        list.forEach(m -> {
+            System.out.println(m);
+            assertTrue(m.getNickName().contains("박"));
+        });
+    }
 }
