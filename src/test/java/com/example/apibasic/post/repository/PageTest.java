@@ -1,6 +1,7 @@
 package com.example.apibasic.post.repository;
 
 import com.example.apibasic.post.dto.PageRequestDTO;
+import com.example.apibasic.post.dto.PageResponseDTO;
 import com.example.apibasic.post.entity.PostEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -21,7 +23,7 @@ class PageTest {
 
     @BeforeEach
     void bulkInsert() {
-        for (int i = 0; i <= 500; i++) {
+        for (int i = 0; i <=433; i++) {
             PostEntity post = PostEntity.builder()
                     .title("안녕~" + i)
                     .writer("김말종" + i)
@@ -79,12 +81,12 @@ class PageTest {
         //given
         String title = "3";
         PageRequest pageRequest = PageRequest.of(
-                0,
+                3,
                 10,
                 Sort.Direction.DESC,
                 "createDate");
 
-        Page<PostEntity> postEntityPage
+        Slice<PostEntity> postEntityPage
                 = postRepository.findByTitleContaining(title, pageRequest);
 
         List<PostEntity> contents = postEntityPage.getContent();
@@ -95,5 +97,11 @@ class PageTest {
         System.out.println("prev = " + prev);
 
         contents.forEach(System.out::println);
+        
+        //페이지 정보
+        PageResponseDTO<PostEntity> dto 
+                = new PageResponseDTO<PostEntity>((Page<PostEntity>)postEntityPage);
+
+        System.out.println("dto = " + dto);
     }
 }//class
