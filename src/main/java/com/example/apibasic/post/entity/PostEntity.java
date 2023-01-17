@@ -1,14 +1,11 @@
 package com.example.apibasic.post.entity;
 
-import com.example.apibasic.post.dto.PostResponseDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 // 게시물의 데이터 자바빈즈
 @Setter @Getter @ToString
@@ -16,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of="postNo")
 @Builder
-
 @Entity
 @Table(name="tbl_post")
 public class PostEntity {
@@ -25,25 +21,24 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="post_code")
+    @Column(name="post_no") //기본키는 notnull, unique 자동으로 붙는다
     private Long postNo; // 게시물 식별번호
 
-    @Column(nullable = false,length = 30)
+    @Column(nullable = false)
     private String writer; // 작성자
 
     @Column(nullable = false)
     private String title; // 제목
 
-    @Column(nullable = false)
     private String content; // 내용
 
-    private List<String> hashTags; // 해시태그 목록
+  //  private List<String> hashTags; // 해시태그 목록
 
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") ->DTO로
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate; // 작성 시간
 
-    @UpdateTimestamp
+    @UpdateTimestamp //처음 insert에 들어가고 update되면 수정된다
     private LocalDateTime modifyDate; // 수정 시간
 
 
