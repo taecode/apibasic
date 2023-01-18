@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -73,6 +75,7 @@ public class PostService {
     }
 
     // 등록 중간처리
+    @Transactional //DML 쿼리가 여러개 동시에 나가는 상황에서 트랜잭션 처리
     public PostDetailResponseDTO insert(final PostCreateDTO createDTO)
         throws RuntimeException //IllegalArgumentException, OptimisticLockingFailureException
     {
@@ -88,14 +91,18 @@ public class PostService {
 
         //해시태그 문자열 리스트에서 문자열들을 하나하나 추출한 뒤
         //해시태그 엔터티로 만들고 그 엔터티를 데이터베이스에 저장한다
+        List<HashTagEntity> hashTagEntities=new ArrayList<>();
         for (String ht : hashTags) {
             HashTagEntity tagEntity = HashTagEntity.builder()
+                    .post(savedPost) //원본 게시물 정보
                     .tagName(ht)
                     .build();
 
-            hashTagRepository.save(tagEntity);
+            HashTagEntity savedTag=hashTagRepository.save(tagEntity);
+           hashTagEntities.add(savedTag);
         }
 
+        savedPost.setHashTags(hashTagEntities);
 
         //저장된 객체를 DTO로 변환해서 반환
         return new PostDetailResponseDTO(savedPost);
